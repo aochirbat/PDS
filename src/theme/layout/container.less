@@ -1,0 +1,54 @@
+.web-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  .web-content {
+    overflow-y: auto;
+    min-height: 100%;
+    .content-wrapper {
+      padding: 40px 62px;
+    }
+
+    @media (max-width: 575px) {
+      .content-wrapper {
+        max-width: 100%;
+        padding: 25px;
+        padding-top: 10px;
+      }
+    }
+
+    @media screen and (min-width: 576px) and (max-width: 768px) {
+      .content-wrapper {
+        max-width: 100%;
+        padding: 25px;
+        padding-top: 96px;
+      }
+    }
+
+    @media screen and (min-width: 576px) and (max-width: 768px) {
+      .content-wrapper {
+        max-width: 100%;
+        padding: 25px;
+      }
+    }
+
+    @media screen and (min-width: 769px) and (max-width: 1024px) {
+      .content-wrapper {
+        max-width: 100%;
+        padding: 25px;
+      }
+    }
+
+    @media screen and (min-width: 1025px) and (max-width: 1499px) {
+      .content-wrapper {
+        max-width: 100%;
+      }
+    }
+
+    @media screen and (min-width: 1500px) {
+      .content-wrapper {
+        max-width: 1440px;
+      }
+    }
+  }
+}
