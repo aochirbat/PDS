@@ -136,7 +136,7 @@ const ProductDetails = () => {
                         <span>
                           {e?.firstname} {e?.lastname}
                         </span>
-                        <span>{e?.phone}</span>
+                        <span>{e?.position}</span>
                       </div>
                     </div>
                     <div className="flexRow">
