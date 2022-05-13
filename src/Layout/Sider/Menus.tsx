@@ -26,7 +26,9 @@ const Menus = () => {
     ),
     getItem("Categories", "2", <TeamOutlined />, [
       getItem(
-        <Link to={{ pathname: "/details", state: "1" }}>Card</Link>,
+        <Link to={"/details"} state={"hey"}>
+          Card
+        </Link>,
         "3",
         <TeamOutlined />
       ),

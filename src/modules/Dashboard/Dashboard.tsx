@@ -6,7 +6,7 @@ const Dashboard = () => {
   return (
     <>
       <Row justify="space-around" gutter={[16, 16]}>
-        <Col sm={12} md={6} lg={6}>
+        <Col xs={22} sm={16} md={6} lg={6}>
           <Card className="radius8 shadow card-1">
             <div className="left">
               <div>
@@ -22,10 +22,10 @@ const Dashboard = () => {
             <div className="right"></div>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={22} sm={16} md={6} lg={6}>
           <Card className="radius8 shadow"></Card>
         </Col>
-        <Col span={6}>
+        <Col xs={22} sm={16} md={6} lg={6}>
           <Card className="radius8 shadow">3</Card>
         </Col>
       </Row>
@@ -34,14 +34,14 @@ const Dashboard = () => {
         gutter={[16, 16]}
         style={{ marginTop: "12px" }}
       >
-        <Col sm={12} md={6} lg={6}>
+        <Col xs={22} sm={16} md={6} lg={6}>
           <Card className="radius8 shadow"></Card>
         </Col>
-        <Col sm={12} md={6} lg={6}>
-          <Card></Card>
+        <Col xs={22} sm={16} md={6} lg={6}>
+          <Card className="radius8 shadow"></Card>
         </Col>
-        <Col sm={12} md={6} lg={6}>
-          <Card></Card>
+        <Col xs={22} sm={16} md={6} lg={6}>
+          <Card className="radius8 shadow"></Card>
         </Col>
       </Row>
     </>

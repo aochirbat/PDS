@@ -1,9 +1,10 @@
 import React from "react";
 import { Card, Col, Row } from "antd";
-import { RightOutlined } from "@ant-design/icons";
+import { RightOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
 import "./ProductDetails.less";
 import { useState } from "react";
-
+import RightIconControl from "component/CardControls/RightIconControl/RightIconControl";
+import { Input } from "antd";
 const ProductDetails = (props: any) => {
   console.log(props);
   const [microService, setMicroService] = useState<any>();
@@ -45,11 +46,20 @@ const ProductDetails = (props: any) => {
       ],
     },
   ];
+  const onSearch = () => {};
   return (
     <Row justify="space-around">
-      <Col span={6}>
-        <Card className="radius8 shadow micro-services">
+      <Col xs={22} sm={16} md={6} lg={6}>
+        <Card className="radius8 shadow micro-services marginBottom12">
           <div className="f18TextCenter">Card microservices</div>
+          <Row justify="center">
+            <Input.Search
+              placeholder="microservice search name"
+              allowClear
+              onSearch={onSearch}
+              style={{ width: "80%", margin: "12px 0px" }}
+            />
+          </Row>
           {mockMicroservices?.map((e) => {
             return (
               <div className="row" onClick={() => setMicroService(e)}>
@@ -61,8 +71,8 @@ const ProductDetails = (props: any) => {
         </Card>
       </Col>
       {microService && (
-        <Col span={8}>
-          <Card className="radius8 shadow micro-profile">
+        <Col xs={22} sm={16} md={6} lg={6}>
+          <Card className="radius8 shadow micro-profile marginBottom12">
             <div className="f18TextCenter">Service details</div>
             <Card className="info-card">
               <Row justify="space-between">
@@ -107,8 +117,8 @@ const ProductDetails = (props: any) => {
         </Col>
       )}
       {assign && (
-        <Col span={4}>
-          <Card className="radius8 shadow">
+        <Col xs={22} sm={16} md={6} lg={6}>
+          <Card className="radius8 shadow employee-profile">
             <div className="f18TextCenter">Ажилтаны мэдээлэл</div>
             <div className="flexColumnCenter" style={{ margin: "12px 0px" }}>
               <img
@@ -122,6 +132,18 @@ const ProductDetails = (props: any) => {
                 <span>{assign?.email}</span>
               </Col>
             </div>
+            <RightIconControl
+              icon={<PhoneOutlined style={{ color: "white" }} />}
+              itemName={assign?.phone}
+            />
+            <RightIconControl
+              icon={<MailOutlined style={{ color: "white" }} />}
+              itemName={assign?.email}
+            />
+            <RightIconControl
+              icon={<PhoneOutlined style={{ color: "white" }} />}
+              itemName={"yriltsah"}
+            />
           </Card>
         </Col>
       )}

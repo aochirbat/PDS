@@ -1,54 +1,44 @@
-import React from "react";
-import { Route, Switch, Link, Redirect } from "react-router-dom";
-import { DashboardOutlined, TeamOutlined } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
-import PrivateRoutes from "./PrivateRoutes";
-import Menus from "Layout/Sider/Menus";
+import React, { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { Layout } from "antd";
 import MainLayout from "Layout/Main/MainLayout";
 import Dashboard from "modules/Dashboard/Dashboard";
 import ProductDetails from "modules/ProductDetails/ProductDetails";
-
-const Login = React.lazy(() => import("modules/Login/Login"));
+import useAuth from "reducers/authReducer";
+import Login from "modules/Login/Login";
 
 const { Content, Sider } = Layout;
 
 const MainRoute = () => {
-  const auth = true;
-  const PrivateRoute = ({ children, ...rest }: any) => {
-    return (
+  const auth = useAuth((state) => state.auth);
+  console.log("auth", auth);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (auth === false) {
+      navigate("/");
+    }
+  }, [auth]);
+  return (
+    <Routes>
+      <Route path={"/"} element={<Login />}></Route>
+      <Route path={"/login"} element={<Login />}></Route>
       <Route
-        {...rest}
-        render={({ location }) =>
-          auth ? (
-            children
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/login",
-                state: { from: location },
-              }}
-            />
-          )
+        path="/dashboard"
+        element={
+          <MainLayout>
+            <Dashboard />
+          </MainLayout>
         }
       />
-    );
-  };
-  return (
-    <Switch>
-      <Route path={"/login"}>
-        <Login />
-      </Route>
-      <PrivateRoute exact={true} path={"/dashboard"}>
-        <MainLayout>
-          <Dashboard />
-        </MainLayout>
-      </PrivateRoute>
-      <PrivateRoute exact={true} path={"/details"}>
-        <MainLayout>
-          <ProductDetails />
-        </MainLayout>
-      </PrivateRoute>
-    </Switch>
+      <Route
+        path="/details"
+        element={
+          <MainLayout>
+            <ProductDetails />
+          </MainLayout>
+        }
+      />
+    </Routes>
   );
 };
 
