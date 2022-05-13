@@ -11,7 +11,6 @@ const { Content, Sider } = Layout;
 
 const MainRoute = () => {
   const auth = useAuth((state) => state.auth);
-  console.log("auth", auth);
   const navigate = useNavigate();
   useEffect(() => {
     if (auth === false) {
@@ -24,14 +23,6 @@ const MainRoute = () => {
       <Route path={"/login"} element={<Login />}></Route>
       <Route
         path="/dashboard"
-        element={
-          <MainLayout>
-            <Dashboard />
-          </MainLayout>
-        }
-      />
-      <Route
-        path="/details"
         element={
           <MainLayout>
             <ProductDetails />

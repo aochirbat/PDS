@@ -1,52 +1,63 @@
 import React from "react";
-import { Card, Col, Row } from "antd";
-import { RightOutlined, PhoneOutlined, MailOutlined } from "@ant-design/icons";
+import { Avatar, Card, Col, Row } from "antd";
+import {
+  RightOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  UserOutlined,
+  RadarChartOutlined,
+  BankOutlined,
+} from "@ant-design/icons";
 import "./ProductDetails.less";
 import { useState } from "react";
 import RightIconControl from "component/CardControls/RightIconControl/RightIconControl";
 import { Input } from "antd";
-const ProductDetails = (props: any) => {
-  console.log(props);
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { api } from "services/api";
+import useAuth from "reducers/authReducer";
+
+const ProductDetails = () => {
+  const location = useLocation();
+  const access_token = useAuth((state) => state.access_token);
   const [microService, setMicroService] = useState<any>();
   const [assign, setAssign] = useState<any>();
-  const mockMicroservices = [
-    {
-      key: "1",
-      name: "card-adapter-service-1",
-      assigns: [
-        {
-          name: "togoldor",
-          phone: "89889",
-          email: "ochkiwork@gmail.com",
+  const [assigns, setAssigns] = useState<any>();
+  const [repos, setRepos] = useState<any>();
+  const [search, setSearch] = useState<string>();
+
+  useEffect(() => {
+    api
+      .get(`/systemexpo/devops/mock/repos/${location?.state}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
         },
-      ],
-    },
-    {
-      key: "1",
-      name: "card-adapter-service-1",
-      assigns: [
-        {
-          name: "togoldor",
-          phone: "89889",
-          email: "ochkiwork@gmail.com",
+      })
+      .then((response) => setRepos(response?.data));
+  }, [location?.state]);
+
+  useEffect(() => {
+    api
+      .get(`/systemexpo/assign/products/${microService?.name}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
         },
-      ],
-    },
-    {
-      key: "1",
-      name: "card-adapter-service-1",
-      assigns: [
-        {
-          name: "togoldor",
-          phone: "89889",
-          email: "ochkiwork@gmail.com",
-          image:
-            "https://img.freepik.com/free-photo/close-up-young-successful-man-smiling-camera-standing-casual-outfit-against-blue-background_1258-66609.jpg?w=2000",
-        },
-      ],
-    },
-  ];
+      })
+      .then((response) => setAssigns(response?.data));
+  }, [microService]);
+
+  function SearchCategroy(row: any) {
+    if (search) {
+      return row.filter(
+        (item: any) =>
+          item.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+      );
+    } else {
+      return row;
+    }
+  }
   const onSearch = () => {};
+
   return (
     <Row justify="space-around">
       <Col xs={22} sm={16} md={6} lg={6}>
@@ -56,22 +67,33 @@ const ProductDetails = (props: any) => {
             <Input.Search
               placeholder="microservice search name"
               allowClear
+              onChange={(e: any) => {
+                setSearch(e?.target?.value);
+              }}
               onSearch={onSearch}
               style={{ width: "80%", margin: "12px 0px" }}
             />
           </Row>
-          {mockMicroservices?.map((e) => {
-            return (
-              <div className="row" onClick={() => setMicroService(e)}>
-                <div>{e?.name}</div>
-                <RightOutlined />
-              </div>
-            );
-          })}
+          <div style={{ maxHeight: "650px", overflowY: "scroll" }}>
+            {SearchCategroy(repos)?.map((e: any) => {
+              return (
+                <div
+                  className="row"
+                  onClick={() => {
+                    setMicroService(e);
+                    setAssign(undefined);
+                  }}
+                >
+                  <div style={{ cursor: "grab" }}>{e?.name}</div>
+                  <RightOutlined />
+                </div>
+              );
+            })}
+          </div>
         </Card>
       </Col>
       {microService && (
-        <Col xs={22} sm={16} md={6} lg={6}>
+        <Col xs={22} sm={16} md={8} lg={8}>
           <Card className="radius8 shadow micro-profile marginBottom12">
             <div className="f18TextCenter">Service details</div>
             <Card className="info-card">
@@ -79,40 +101,51 @@ const ProductDetails = (props: any) => {
                 <div className="f14bold">{microService?.name}</div>
                 <div className="flexColumn twoColumnItem">
                   <span>Хариуцдаг хүний тоо</span>
-                  <span className="alignRight">{4}</span>
+                  <span className="alignRight">{assigns?.length}</span>
                 </div>
               </Row>
-              <div className="flexColumn twoColumnItem">
-                <span>Main branch</span>
-                <span>master</span>
-              </div>
+              <Row justify="space-between">
+                <div className="flexColumn twoColumnItem">
+                  <span>Main branch</span>
+                  <span>master</span>
+                </div>
+                <div className="flexColumn twoColumnItem">
+                  <span>Хэмжээ</span>
+                  <span className="alignRight">
+                    {Math.floor(parseInt(microService?.size) % 1024)}MB
+                  </span>
+                </div>
+              </Row>
             </Card>
             <div className="f14Bold">Хариуцдаг хүмүүс</div>
-            {microService?.assigns?.map((e: any) => {
-              return (
-                <Row
-                  style={{ marginTop: "12px" }}
-                  justify="space-between"
-                  onClick={() => setAssign(e)}
-                >
-                  <div className="flexRow">
-                    <img
-                      src={e?.image}
-                      width="50px"
-                      height={"50px"}
-                      className="borderImage"
-                    />
-                    <div className="flexColumn twoColumnItem assignInfo">
-                      <span>{e?.name}</span>
-                      <span>{e?.phone}</span>
+            <div style={{ maxHeight: "500px", overflowY: "scroll" }}>
+              {assigns?.map((e: any) => {
+                return (
+                  <Row
+                    style={{ marginTop: "12px" }}
+                    justify="space-between"
+                    onClick={() => setAssign(e)}
+                  >
+                    <div className="flexRow">
+                      <Avatar
+                        shape="square"
+                        size={48}
+                        icon={<UserOutlined />}
+                      />
+                      <div className="flexColumn twoColumnItem assignInfo">
+                        <span>
+                          {e?.firstname} {e?.lastname}
+                        </span>
+                        <span>{e?.phone}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flexRow">
-                    <RightOutlined />
-                  </div>
-                </Row>
-              );
-            })}
+                    <div className="flexRow">
+                      <RightOutlined />
+                    </div>
+                  </Row>
+                );
+              })}
+            </div>
           </Card>
         </Col>
       )}
@@ -121,28 +154,39 @@ const ProductDetails = (props: any) => {
           <Card className="radius8 shadow employee-profile">
             <div className="f18TextCenter">Ажилтаны мэдээлэл</div>
             <div className="flexColumnCenter" style={{ margin: "12px 0px" }}>
-              <img
-                src={assign?.image}
-                width="80px"
-                height={"80px"}
-                className="borderImage"
-              />
+              <Avatar shape="square" size={64} icon={<UserOutlined />} />
               <Col className="flexColumnCenter twoColumnItem">
-                <span>{assign?.name}</span>
+                <span>
+                  {assign?.firstname} {assign?.lastname}
+                </span>
                 <span>{assign?.email}</span>
               </Col>
             </div>
             <RightIconControl
-              icon={<PhoneOutlined style={{ color: "white" }} />}
+              icon={
+                <BankOutlined style={{ color: "white", fontSize: "14px" }} />
+              }
+              itemName={assign?.department}
+            />
+            <RightIconControl
+              icon={
+                <RadarChartOutlined
+                  style={{ color: "white", fontSize: "14px" }}
+                />
+              }
+              itemName={assign?.position}
+            />
+            <RightIconControl
+              icon={
+                <PhoneOutlined style={{ color: "white", fontSize: "14px" }} />
+              }
               itemName={assign?.phone}
             />
             <RightIconControl
-              icon={<MailOutlined style={{ color: "white" }} />}
+              icon={
+                <MailOutlined style={{ color: "white", fontSize: "14px" }} />
+              }
               itemName={assign?.email}
-            />
-            <RightIconControl
-              icon={<PhoneOutlined style={{ color: "white" }} />}
-              itemName={"yriltsah"}
             />
           </Card>
         </Col>

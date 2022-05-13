@@ -18,6 +18,7 @@ interface Login {
 const Login = () => {
   const navigate = useNavigate();
   const login = useAuth((state) => state.login);
+  const setAccessToken = useAuth((state) => state.setAccessToken);
   const [loading, setLoading] = useState(false);
   const OnFinish = (values: Login) => {
     setLoading(true);
@@ -27,9 +28,7 @@ const Login = () => {
       password: values?.password,
     };
 
-    api({
-      baseUrl: "https://doob.world:6499/v1",
-    })
+    api
       .post(
         "deskLogin/auth",
         {},
@@ -45,7 +44,7 @@ const Login = () => {
       )
       .then((response: any) => {
         setLoading(false);
-        console.log("hello", response);
+        setAccessToken(response?.data?.access_token);
         login();
         notification.success({
           message: `Амжилттай нэвтэрлээ.`,
@@ -55,7 +54,6 @@ const Login = () => {
         navigate("/dashboard");
       })
       .catch((error) => {
-        console.log("error", error);
         setLoading(false);
         notification.error({
           message: `Нэвтрэлт хийх үед алдаа гарлаа.`,
